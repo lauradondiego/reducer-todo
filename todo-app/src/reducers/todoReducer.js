@@ -1,63 +1,41 @@
-export const initialState = [
-  {
-    item: "Learn about reducers",
-    completed: false,
-    id: 3892987589
-  }
-];
+export const initialState = {
+  todos: [{ item: "Learn about reducers", completed: false, id: 3892987589 }]
+};
 
 export const todoReducer = (state, action) => {
   switch (action.type) {
     case "TOGGLE_TODO":
       return {
         ...state,
-        completed: !state.completed
+        todos: state.todos.map(todo => {
+          if (todo.id === action.payload)
+            return { ...todo, completed: !todo.completed };
+          else {
+            return todo;
+          }
+        })
       };
     case "ADD_TODO":
+      console.log("add todo action", action, "state info", state);
       return {
         ...state,
-        item: action.payload,
-        completed: !state.completed,
-        id: Date.now()
+        todos: [
+          ...state.todos,
+          {
+            item: action.payload,
+            completed: false,
+            id: Date.now()
+          }
+        ]
       };
     case "CLEAR_TODO":
       return {
         ...state,
-        completed: state.completed
+        todos: state.todos.filter(todo => {
+          return !todo.completed;
+        })
       };
     default:
       return state;
   }
 };
-
-// toggleItem = id => {
-//   this.setState({
-//     todo: this.state.todo.map(item => {
-//       if (item.id === id) {
-//         return {
-//           ...item,
-//           completed: !item.completed
-//         };
-//       } else {
-//         return item;
-//       }
-//     })
-//   });
-// };
-
-// addItem = itemName => {
-//   const newItem = {
-//     name: itemName,
-//     id: Date.now(),
-//     completed: false
-//   };
-//   this.setState({
-//     todo: [...this.state.todo, newItem]
-//   });
-// };
-
-// clearCompleted = () => {
-//   this.setState({
-//     todo: this.state.todo.filter(task => !task.completed)
-//   });
-// };
